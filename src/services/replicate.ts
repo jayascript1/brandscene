@@ -5,7 +5,7 @@ const API_BASE_URL = '/api'; // Use Vite proxy in development, Vercel functions 
 
 // Replicate model configuration
 const REPLICATE_CONFIG = {
-  model: 'stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf', // Stable Diffusion XL with dimension support
+  model: 'google/gemini-2.5-flash-image', // Using Gemini Flash 2.5
   // We'll determine the version during initialization
   webhook: undefined, // We'll handle polling instead
 };
@@ -153,22 +153,21 @@ export const generateImage = async (
   retryCount = 0
 ): Promise<{ url: string; revisedPrompt?: string }> => {
   try {
-    // Map dimensions to width/height
-    const dimensionMap = {
-      square: { width: 1024, height: 1024 },
-      portrait: { width: 576, height: 1024 },
-      landscape: { width: 1024, height: 576 }
+    // Map dimensions to aspect ratio instructions for Gemini Flash 2.5
+    const aspectRatioInstructions = {
+      square: "The image should be in a 1:1 (square) aspect ratio.",
+      portrait: "The image should be in a 9:16 (portrait) aspect ratio.",
+      landscape: "The image should be in a 16:9 (landscape) aspect ratio."
     };
     
-    const { width, height } = dimensionMap[dimensions];
+    // Add aspect ratio instruction to the prompt
+    const enhancedPrompt = `${prompt} ${aspectRatioInstructions[dimensions]}`;
     
-    // Create prediction using Stable Diffusion parameters
+    // Create prediction using Gemini 2.5 Flash parameters
     const prediction = await createPrediction(REPLICATE_CONFIG.model, {
-      prompt: prompt,
-      width: width,
-      height: height,
-      num_inference_steps: 25,              // More inference steps for better quality
-      guidance_scale: 7.5,                 // Guidance scale for prompt adherence
+      prompt: enhancedPrompt,
+      steps: 25,              // More inference steps for better quality
+      temperature: 0.1,       // Lower temperature for more deterministic results
       seed: Math.floor(Math.random() * 1000000) // Random seed for variety
     });
 
