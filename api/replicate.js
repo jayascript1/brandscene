@@ -67,7 +67,7 @@ const sendError = (res, message, status = 500, details = {}) => {
 };
 
 // Main handler function
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   console.log('API request received:', {
     method: req.method,
     url: req.url,
