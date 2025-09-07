@@ -2,13 +2,17 @@ import { useCallback } from 'react';
 import { useAppContext } from '../context/AppContext';
 import { validateForm } from '../utils/validation';
 import { buildPrompt } from '../utils/formHelpers';
-import { BrandInfo } from '../types';
+import { BrandInfo, UploadedImage } from '../types';
 
 export const useForm = () => {
   const { state, dispatch } = useAppContext();
 
   const updateBrandInfo = useCallback((updates: Partial<BrandInfo>) => {
     dispatch({ type: 'UPDATE_BRAND_INFO', payload: updates });
+  }, [dispatch]);
+
+  const setImage = useCallback((image: UploadedImage | undefined) => {
+    dispatch({ type: 'SET_IMAGE', payload: image });
   }, [dispatch]);
 
   const validateCurrentForm = useCallback(() => {
@@ -46,11 +50,13 @@ export const useForm = () => {
   return {
     formData: state.formData,
     updateBrandInfo,
+    setImage,
     validateCurrentForm,
     isFormValid,
     canSubmit,
     getPrompt,
     resetForm,
-    errors: state.formData.errors
+    errors: state.formData.errors,
+    isValidating: false // Add this for compatibility
   };
 };

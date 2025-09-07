@@ -25,3 +25,12 @@ export const PROMPT_TEMPLATES = {
     'Scene variation: Dynamic lifestyle scene with people and movement.'
   ]
 } as const;
+
+export const OPENAI_CONFIG = {
+  model: 'dall-e-3',
+  size: '1024x1024',
+  quality: 'standard',
+  n: 1,
+  style: 'vivid',
+  maxRetries: 3
+} as const;

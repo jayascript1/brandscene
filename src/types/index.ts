@@ -19,7 +19,7 @@ export interface GeneratedScene {
   sceneNumber: number;
   imageUrl: string;
   prompt: string;
-  status: 'pending' | 'completed' | 'error';
+  status: 'pending' | 'generating' | 'completed' | 'error';
   createdAt: Date;
   downloadedAt?: Date;
 }
@@ -88,6 +88,7 @@ export interface AIProvider {
 
 export interface FormData {
   brandInfo: BrandInfo;
+  image?: UploadedImage;
   isSubmitting: boolean;
   errors: Record<string, string>;
 }

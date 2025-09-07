@@ -5,7 +5,8 @@ import {
   GeneratedScene, 
   AppState, 
   FormData, 
-  GenerationRequest 
+  GenerationRequest,
+  UploadedImage
 } from '../types';
 
 type AppAction =
@@ -16,6 +17,7 @@ type AppAction =
   
   // Form actions
   | { type: 'UPDATE_BRAND_INFO'; payload: Partial<BrandInfo> }
+  | { type: 'SET_IMAGE'; payload: UploadedImage | undefined }
   | { type: 'SET_FORM_SUBMITTING'; payload: boolean }
   | { type: 'SET_FORM_ERROR'; payload: { field: string; message: string } }
   | { type: 'CLEAR_FORM_ERRORS' }
@@ -91,6 +93,15 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
             ...state.formData.brandInfo,
             ...action.payload
           }
+        }
+      };
+      
+    case 'SET_IMAGE':
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          image: action.payload
         }
       };
       

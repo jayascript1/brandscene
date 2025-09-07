@@ -18,12 +18,12 @@ const ResultsPage: React.FC = () => {
   const hasPartialResults = generatedScenes.length > 0 && generatedScenes.length < 4;
 
   const handleRetry = async () => {
-    if (formData.brandInfo && formData.image && !isRetrying) {
+    if (formData.brandInfo && !isRetrying) {
       setIsRetrying(true);
       setRetryCount(prev => prev + 1);
       
       try {
-        await retryGeneration(formData.brandInfo, formData.image);
+        await retryGeneration(formData.brandInfo);
         // Reset retry count on successful retry
         setRetryCount(0);
       } catch (error) {

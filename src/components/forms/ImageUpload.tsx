@@ -16,7 +16,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ className = '' }) => {
   const handleFileSelect = useCallback(async (file: File) => {
     setIsProcessing(true);
     try {
-      await setImage(file);
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      
+      // Create UploadedImage object
+      const uploadedImage = {
+        file,
+        previewUrl,
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type
+      };
+      
+      await setImage(uploadedImage);
     } finally {
       setIsProcessing(false);
     }
