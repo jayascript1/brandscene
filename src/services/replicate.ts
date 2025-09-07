@@ -153,6 +153,9 @@ export const generateImage = async (
   retryCount = 0
 ): Promise<{ url: string; revisedPrompt?: string }> => {
   try {
+    // Debug logging
+    console.log('generateImage called with dimensions:', dimensions);
+    
     // Map dimensions to width/height
     const dimensionMap = {
       square: { width: 1024, height: 1024 },
@@ -161,6 +164,7 @@ export const generateImage = async (
     };
     
     const { width, height } = dimensionMap[dimensions];
+    console.log('Mapped dimensions:', { width, height, original: dimensions });
     
     // Create prediction using our API with Gemini 2.5 Flash parameters
     const prediction = await createPrediction(REPLICATE_CONFIG.model, {
@@ -354,6 +358,12 @@ export const generateMultipleScenes = async (
   brandInfo: BrandInfo,
   onProgress?: (progress: number, scene?: GeneratedScene) => void
 ): Promise<GeneratedScene[]> => {
+  console.log('generateMultipleScenes called with brandInfo:', {
+    imageDimensions: brandInfo.imageDimensions,
+    brandName: brandInfo.brandName,
+    productName: brandInfo.productName
+  });
+  
   const scenePrompts = generateSceneVariations(brandInfo);
   
   // Generate all scenes in parallel for better efficiency
@@ -362,6 +372,7 @@ export const generateMultipleScenes = async (
       // Update progress for each scene start
       onProgress?.((i / scenePrompts.length) * 100);
       
+      console.log(`Generating scene ${i + 1} with dimensions:`, brandInfo.imageDimensions);
       const result = await generateImage(prompt, brandInfo.imageDimensions);
       
       const scene: GeneratedScene = {
