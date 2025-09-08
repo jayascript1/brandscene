@@ -157,7 +157,7 @@ class ErrorMonitor {
   }
 
   private categorizeError(error: Error | string): ErrorReport['category'] {
-    const message = error instanceof Error ? error.message : error;
+    const message = error instanceof Error ? error.message : String(error);
     const lowerMessage = message.toLowerCase();
 
     if (lowerMessage.includes('network') || lowerMessage.includes('fetch') || lowerMessage.includes('connection')) {

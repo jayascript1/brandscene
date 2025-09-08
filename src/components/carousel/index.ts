@@ -14,3 +14,4 @@ export { CarouselLoadingState } from './CarouselLoadingState';
 export { LoadingAnimationTest } from './LoadingAnimationTest';
 export { ExportControls } from './ExportControls';
 export { ExportTest } from './ExportTest';
+export { Simple3DCarousel } from './Simple3DCarousel';

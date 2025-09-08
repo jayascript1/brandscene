@@ -3,6 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import { TransitionWrapper } from './TransitionWrapper';
 import { GeneratedScene } from '../../types';
 import { ASPECT_RATIO_CLASSES } from '../../services/replicate';
+import { CarouselWrapper } from '../carousel';
 
 interface LivePreviewProps {
   className?: string;
@@ -140,15 +141,14 @@ const LivePreview: React.FC<LivePreviewProps> = ({ className = '' }) => {
 
       {hasScenes && !isGenerating && (
         <TransitionWrapper isVisible={true} type="slide" delay={500}>
-          <div className="text-center mt-6">
-            <a 
-              href="/results"
-              className="inline-flex items-center justify-center bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-lg hover:shadow-xl"
-              aria-label="View all generated scenes in 3D carousel"
-            >
-              <span className="mr-2">🎬</span>
-              View in 3D Carousel
-            </a>
+          <div className="mt-8">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-semibold text-white mb-2">3D Carousel</h3>
+              <p className="text-dark-300">Swipe or use arrow keys to navigate</p>
+            </div>
+            <div className="rounded-lg overflow-hidden">
+              <CarouselWrapper className="w-full" />
+            </div>
           </div>
         </TransitionWrapper>
       )}

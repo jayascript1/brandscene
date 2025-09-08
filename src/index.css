@@ -267,3 +267,12 @@
 .skip-link:focus {
   top: 6px;
 }
+
+/* 3D Carousel Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}

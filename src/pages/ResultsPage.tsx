@@ -160,33 +160,9 @@ const ResultsPage: React.FC = () => {
           </TransitionWrapper>
           
           <TransitionWrapper isVisible={true} type="scale" delay={200}>
-            <HoverCard className="bg-dark-800 rounded-lg p-6 sm:p-8" hoverEffect="glow">
-              <div className="text-center">
-                <div className="text-dark-400 mb-4 animate-float">
-                  <svg className="mx-auto h-12 w-12 sm:h-16 sm:w-16" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                    <path d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40h10v-4a6 6 0 0110.712-3.714M14 40v-4a9.971 9.971 0 01.712-3.714m0 0a10 10 0 012.828-2.828M24 32a10 10 0 012.828-2.828" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4 animate-fade-in">
-                  3D Carousel Coming Soon
-                </h2>
-                <p className="text-dark-300 mb-6 animate-fade-in">
-                  Your generated scenes will be displayed here in an interactive 3D carousel
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-md mx-auto">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div 
-                      key={i}
-                      className="w-full h-24 sm:h-32 bg-dark-700 rounded-lg flex items-center justify-center animate-pulse-slow"
-                      style={{ animationDelay: `${i * 0.1}s` }}
-                      aria-label={`Placeholder for scene ${i}`}
-                    >
-                      <span className="text-dark-400 text-sm sm:text-base">Scene {i}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </HoverCard>
+            <div className="bg-dark-800 rounded-lg p-6 sm:p-8">
+              <CarouselWrapper className="w-full h-96 sm:h-[500px] lg:h-[600px]" />
+            </div>
           </TransitionWrapper>
           
           <TransitionWrapper isVisible={true} type="slide" delay={300}>

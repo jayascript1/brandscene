@@ -110,11 +110,13 @@ export const useCarouselMechanics = (config: Partial<CarouselConfig> = {}) => {
     const deltaX = touch.clientX - touchStartRef.current.x;
     const deltaY = touch.clientY - touchStartRef.current.y;
     
-    // Only respond to horizontal swipes
-    if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+    // Only respond to horizontal swipes (improved threshold)
+    if (Math.abs(deltaX) < Math.abs(deltaY) * 0.5) return;
     
-    const sensitivity = 0.01;
-    const newAngle = touchStartAngleRef.current + deltaX * sensitivity;
+    // Enhanced sensitivity with momentum
+    const sensitivity = 0.008;
+    const momentum = Math.min(Math.abs(deltaX) / 100, 2); // Add momentum based on swipe speed
+    const newAngle = touchStartAngleRef.current + deltaX * sensitivity * momentum;
     
     setState(prev => ({
       ...prev,
@@ -127,10 +129,22 @@ export const useCarouselMechanics = (config: Partial<CarouselConfig> = {}) => {
   const handleTouchEnd = useCallback((totalScenes: number) => {
     if (!touchStartRef.current) return;
 
-    // Snap to nearest scene
+    // Enhanced snap logic with velocity consideration
     const angleStep = (2 * Math.PI) / totalScenes;
     const currentAngle = state.rotationAngle;
-    const nearestIndex = Math.round(-currentAngle / angleStep) % totalScenes;
+    
+    // Calculate velocity for momentum-based snapping
+    const deltaAngle = currentAngle - touchStartAngleRef.current;
+    const velocity = Math.abs(deltaAngle);
+    
+    let nearestIndex = Math.round(-currentAngle / angleStep) % totalScenes;
+    
+    // Add momentum-based adjustment for fast swipes
+    if (velocity > 0.1) {
+      const direction = Math.sign(deltaAngle);
+      nearestIndex = (nearestIndex + direction) % totalScenes;
+    }
+    
     const normalizedIndex = (nearestIndex + totalScenes) % totalScenes;
     
     rotateToScene(normalizedIndex, totalScenes);
@@ -159,14 +173,17 @@ export const useCarouselMechanics = (config: Partial<CarouselConfig> = {}) => {
     }
   }, [prevScene, nextScene, rotateToScene]);
 
-  // Animation loop
+  // Animation loop with easing
   const animate = useCallback(() => {
     setState(prev => {
       if (prev.isRotating) {
         const diff = prev.targetRotation - prev.rotationAngle;
-        const step = Math.sign(diff) * Math.min(Math.abs(diff), rotationSpeed);
         
-        if (Math.abs(diff) < 0.01) {
+        // Enhanced easing for smoother transitions
+        const easingFactor = 0.1; // Adjust for smoother/easier transitions
+        const step = diff * easingFactor;
+        
+        if (Math.abs(diff) < 0.001) {
           return {
             ...prev,
             rotationAngle: prev.targetRotation,
@@ -189,7 +206,7 @@ export const useCarouselMechanics = (config: Partial<CarouselConfig> = {}) => {
     });
     
     animationRef.current = requestAnimationFrame(animate);
-  }, [rotationSpeed, autoRotate, autoRotateSpeed]);
+  }, [autoRotate, autoRotateSpeed]);
 
   // Start animation loop
   useEffect(() => {

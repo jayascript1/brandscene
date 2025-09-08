@@ -19,6 +19,7 @@ interface ThreeCarouselProps {
     autoRotate?: boolean;
     autoRotateSpeed?: number;
   };
+  imageDimensions?: 'square' | 'portrait' | 'landscape';
   onSceneSelect?: (scene: GeneratedScene, index: number) => void;
 }
 
@@ -26,6 +27,7 @@ export const ThreeCarousel: React.FC<ThreeCarouselProps> = ({
   scenes,
   className = '',
   config = {},
+  imageDimensions = 'square',
   onSceneSelect
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,6 +55,23 @@ export const ThreeCarousel: React.FC<ThreeCarouselProps> = ({
   });
 
   const { createSceneCard } = useThreeObjects();
+
+  // Calculate 3D card dimensions based on aspect ratio
+  const getCardDimensions = useCallback((dimensions: 'square' | 'portrait' | 'landscape') => {
+    const baseSize = 2; // Base size for square
+    const depth = 0.1;
+    
+    switch (dimensions) {
+      case 'square':
+        return { width: baseSize, height: baseSize, depth };
+      case 'portrait':
+        return { width: baseSize * 0.75, height: baseSize * 1.33, depth }; // 9:16 ratio
+      case 'landscape':
+        return { width: baseSize * 1.33, height: baseSize * 0.75, depth }; // 16:9 ratio
+      default:
+        return { width: baseSize, height: baseSize, depth };
+    }
+  }, []);
   
   const {
     state: carouselState,
@@ -90,10 +109,11 @@ export const ThreeCarousel: React.FC<ThreeCarouselProps> = ({
       const position = positions[i];
       
       try {
+        const cardDimensions = getCardDimensions(imageDimensions);
         const sceneCard = await createSceneCard(
-          3, // width
-          2, // height
-          0.1, // depth
+          cardDimensions.width,
+          cardDimensions.height,
+          cardDimensions.depth,
           sceneData.imageUrl,
           {
             transparent: true,
@@ -121,7 +141,7 @@ export const ThreeCarousel: React.FC<ThreeCarouselProps> = ({
         console.error(`Failed to create scene card for scene ${i}:`, error);
       }
     }
-  }, [scene, scenes, getScenePositions, createSceneCard]);
+  }, [scene, scenes, getScenePositions, createSceneCard, getCardDimensions, imageDimensions]);
 
   // Update carousel rotation
   const updateCarouselRotation = useCallback(() => {

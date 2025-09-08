@@ -43,6 +43,30 @@ const BrandInfoForm: React.FC<BrandInfoFormProps> = ({ className = '' }) => {
           Choose the aspect ratio for your generated images
         </p>
       </div>
+
+      <div>
+        <label htmlFor="brand-name" className="block text-white font-medium mb-2">
+          Brand Name <span className="text-dark-400 text-sm">(optional)</span>
+        </label>
+        <input
+          id="brand-name"
+          type="text"
+          value={formData.brandInfo.brandName}
+          onChange={(e) => handleInputChange('brandName', e.target.value)}
+          placeholder="e.g., AquaWorks"
+          className={`input-field w-full px-4 py-3 text-base ${getFieldError('brandName') ? 'border-red-500 focus:ring-red-500' : 'border-dark-600 focus:ring-primary-500'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-lg transition-colors`}
+          aria-describedby={getFieldError('brandName') ? 'brand-name-error' : 'brand-name-help'}
+          aria-invalid={!!getFieldError('brandName')}
+        />
+        {getFieldError('brandName') && (
+          <p id="brand-name-error" className="text-red-400 text-sm mt-1" role="alert">
+            {getFieldError('brandName')}
+          </p>
+        )}
+        <p id="brand-name-help" className="text-dark-400 text-sm mt-1 sr-only">
+          Enter your brand name to help generate more personalized scenes
+        </p>
+      </div>
       
       <div>
         <label htmlFor="product-name" className="block text-white font-medium mb-2">
@@ -65,30 +89,6 @@ const BrandInfoForm: React.FC<BrandInfoFormProps> = ({ className = '' }) => {
         )}
         <p id="product-name-help" className="text-dark-400 text-sm mt-1 sr-only">
           Enter the name of your product to help generate more relevant scenes
-        </p>
-      </div>
-      
-      <div>
-        <label htmlFor="brand-name" className="block text-white font-medium mb-2">
-          Brand Name <span className="text-dark-400 text-sm">(optional)</span>
-        </label>
-        <input
-          id="brand-name"
-          type="text"
-          value={formData.brandInfo.brandName}
-          onChange={(e) => handleInputChange('brandName', e.target.value)}
-          placeholder="e.g., AquaWorks"
-          className={`input-field w-full px-4 py-3 text-base ${getFieldError('brandName') ? 'border-red-500 focus:ring-red-500' : 'border-dark-600 focus:ring-primary-500'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-900 rounded-lg transition-colors`}
-          aria-describedby={getFieldError('brandName') ? 'brand-name-error' : 'brand-name-help'}
-          aria-invalid={!!getFieldError('brandName')}
-        />
-        {getFieldError('brandName') && (
-          <p id="brand-name-error" className="text-red-400 text-sm mt-1" role="alert">
-            {getFieldError('brandName')}
-          </p>
-        )}
-        <p id="brand-name-help" className="text-dark-400 text-sm mt-1 sr-only">
-          Enter your brand name to help generate more personalized scenes
         </p>
       </div>
       
