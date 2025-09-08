@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { TransitionWrapper } from './TransitionWrapper';
 import { GeneratedScene } from '../../types';
+import { ASPECT_RATIO_CLASSES } from '../../services/replicate';
 
 interface LivePreviewProps {
   className?: string;
@@ -9,7 +10,10 @@ interface LivePreviewProps {
 
 const LivePreview: React.FC<LivePreviewProps> = ({ className = '' }) => {
   const { state } = useAppContext();
-  const { generatedScenes, generationRequest } = state;
+  const { generatedScenes, generationRequest, formData } = state;
+  
+  // Get the aspect ratio class based on user's dimension selection
+  const aspectRatioClass = ASPECT_RATIO_CLASSES[formData.brandInfo.imageDimensions];
   
   const isGenerating = generationRequest?.status === 'pending' || generationRequest?.status === 'processing';
   const hasScenes = generatedScenes.length > 0;
@@ -27,7 +31,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ className = '' }) => {
       delay={index * 200}
     >
       <div className="bg-dark-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <div className="aspect-square relative">
+        <div className={`${aspectRatioClass} relative`}>
           {scene.imageUrl ? (
             <img
               src={scene.imageUrl}
@@ -78,7 +82,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ className = '' }) => {
       key={`placeholder-${sceneNumber}`}
       className="bg-dark-800 rounded-lg overflow-hidden shadow-lg"
     >
-      <div className="aspect-square relative bg-dark-700 flex items-center justify-center">
+      <div className={`${aspectRatioClass} relative bg-dark-700 flex items-center justify-center`}>
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin mb-2 mx-auto"></div>
           <span className="text-dark-400 text-sm">Generating...</span>

@@ -8,7 +8,7 @@ interface FallbackCarouselProps {
 
 const FallbackCarousel: React.FC<FallbackCarouselProps> = ({ className = '' }) => {
   const { state } = useAppContext();
-  const { generatedScenes } = state;
+  const { generatedScenes, formData } = state;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextScene = () => {
@@ -68,6 +68,7 @@ const FallbackCarousel: React.FC<FallbackCarouselProps> = ({ className = '' }) =
             <SceneCard 
               scene={generatedScenes[currentIndex]} 
               className="max-w-md"
+              imageDimensions={formData.brandInfo.imageDimensions}
             />
           </div>
         </div>

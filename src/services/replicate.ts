@@ -5,10 +5,24 @@ const API_BASE_URL = '/api'; // Use Vite proxy in development, Vercel functions 
 
 // Replicate model configuration
 const REPLICATE_CONFIG = {
-  model: 'google/gemini-2.5-flash-image', // Using Gemini Flash 2.5
+  model: 'google/imagen-4', // Using Imagen 4
   // We'll determine the version during initialization
   webhook: undefined, // We'll handle polling instead
 };
+
+// Dimension mapping for Imagen 4 aspect ratios
+const ASPECT_RATIOS = {
+  square: '1:1',      // Square aspect ratio
+  portrait: '9:16',   // Portrait aspect ratio (vertical)
+  landscape: '16:9'   // Landscape aspect ratio (horizontal)
+} as const;
+
+// CSS aspect ratio classes for display
+export const ASPECT_RATIO_CLASSES = {
+  square: 'aspect-square',           // 1:1
+  portrait: 'aspect-[9/16]',        // 9:16 (portrait)
+  landscape: 'aspect-[16/9]'        // 16:9 (landscape)
+} as const;
 
 // Retry configuration
 const RETRY_CONFIG = {
@@ -153,21 +167,14 @@ export const generateImage = async (
   retryCount = 0
 ): Promise<{ url: string; revisedPrompt?: string }> => {
   try {
-    // Map dimensions to aspect ratio instructions for Gemini Flash 2.5
-    const aspectRatioInstructions = {
-      square: "The image should be in a 1:1 (square) aspect ratio.",
-      portrait: "The image should be in a 9:16 (portrait) aspect ratio.",
-      landscape: "The image should be in a 16:9 (landscape) aspect ratio."
-    };
+    // Get the aspect ratio for the selected dimensions
+    const aspectRatio = ASPECT_RATIOS[dimensions];
     
-    // Add aspect ratio instruction to the prompt
-    const enhancedPrompt = `${prompt} ${aspectRatioInstructions[dimensions]}`;
-    
-    // Create prediction using Gemini 2.5 Flash parameters
+    // Create prediction using Imagen 4 parameters
     const prediction = await createPrediction(REPLICATE_CONFIG.model, {
-      prompt: enhancedPrompt,
-      steps: 25,              // More inference steps for better quality
-      temperature: 0.1,       // Lower temperature for more deterministic results
+      prompt: prompt,
+      aspect_ratio: aspectRatio,
+      num_images: 1,
       seed: Math.floor(Math.random() * 1000000) // Random seed for variety
     });
 
